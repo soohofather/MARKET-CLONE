@@ -1,4 +1,5 @@
-from fastapi import FastAPI,UploadFile, Form, Response
+from fastapi import FastAPI,UploadFile, Form, Response, Depends
+from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -46,22 +47,28 @@ app.add_middleware(
 )
 
 @manager.user_loader()
-def query_user(id):
+def query_user(data):
+    print(f"data: {data}")
+    WHERE_STATEMENTS = f'id="{data}"'
+    if type(data) == dict:
+        WHERE_STATEMENTS = f'''id="{data['id']}'''
+    print(WHERE_STATEMENTS)
     con.row_factory = sqlite3.Row
     cur = con.cursor()
     user = cur.execute(f"""
-                       SELECT * from users WHERE id = "{id}"
+                       SELECT * from users WHERE {WHERE_STATEMENTS}
                        """).fetchone()
+
     return user
 
 @app.post("/login")
 def login(
+    
     id : Annotated[str, Form()],
     password : Annotated[str, Form()]
 ):
-    
+
     user = query_user(id)
-    
     if not user:
         raise InvalidCredentialsException
     elif password != user["password"]:
@@ -69,14 +76,11 @@ def login(
     
     access_token = manager.create_access_token(
         data={
-            "sub": {
-                "id": user["id"],
-                "name": user["name"],
-                "email": user["email"]
-            }
+            "sub": user["id"],  
+            "name": user["name"],  
+            "email": user["email"]
         }
     )
-    
     return {"access_token": access_token}
     
 
@@ -112,7 +116,8 @@ async def create_item(
     return '200'
 
 @app.get('/items')
-async def get_items():
+async def get_items(user = Depends(manager)):
+    print(f"Authenticated user: {user}")  # JWT 토큰으로 인증된 사용자 정보 출력
     con.row_factory = sqlite3.Row
     cur = con.cursor()
     rows = cur.execute(f"""
