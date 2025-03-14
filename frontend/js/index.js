@@ -55,7 +55,14 @@ const renderData = (data) => {
 };
 
 const fetchList = async () => {
-  const res = await fetch("/items");
+  const accessToken = window.localStorage.getItem("token");
+
+  const res = await fetch("/items", {
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-Type": "application/json"
+    },
+  });
 
   if (res.status === 401) {
     alert("로그인이 필요합니다!");

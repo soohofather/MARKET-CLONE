@@ -5,10 +5,12 @@ const handleSubmitForm = async (e) => {
   const body = new FormData(form);
   body.append("insertAt", new Date().getTime());
   try {
-    const res = await fetch("http://127.0.0.1:8000/items", {
+    const accessToken = window.localStorage.getItem("token");
+    const res = await fetch("/items", {
       method: "POST",
       headers: {
-        Accept: "application/json",
+        "Authorization": `Bearer ${accessToken}`,
+        "Accept": "application/json",
       },
       body,
     });

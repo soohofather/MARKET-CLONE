@@ -105,7 +105,8 @@ async def create_item(
                 price: Annotated[int, Form()],
                 description: Annotated[str, Form()],
                 place: Annotated[str, Form()],
-                insertAt: Annotated[int, Form()]
+                insertAt: Annotated[int, Form()],
+                user = Depends(manager)
                 ):
     image_bytes = await image.read()
     cur.execute(f"""
