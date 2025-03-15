@@ -1,0 +1,153 @@
+"use client" import { useState } from "react" import { Search, Filter,
+MessageSquare, ThumbsUp, Eye, ChevronDown } from "lucide-react" import { Avatar,
+AvatarFallback, AvatarImage } from "@/components/ui/avatar" import { Button }
+from "@/components/ui/button" import { Card, CardContent, CardFooter, CardHeader
+} from "@/components/ui/card" import { Input } from "@/components/ui/input"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem,
+DropdownMenuTrigger } from "@/components/ui/dropdown-menu" // Sample data for
+community posts const posts = [ { id: 1, title: "Getting started with Next.js
+and Tailwind CSS", content: "I've been working with Next.js and Tailwind CSS for
+my latest project and wanted to share some tips that might help beginners...",
+author: { name: "Alex Kim", avatar: "/placeholder.svg?height=40&width=40", },
+date: "2시간 전", comments: 24, likes: 156, views: 1204, tags: ["Next.js",
+"Tailwind CSS", "Web Development"], }, { id: 2, title: "React 상태 관리
+라이브러리 비교: Redux vs Zustand", content: "최근 프로젝트에서 여러 상태 관리
+라이브러리를 사용해 보았는데, 각각의 장단점을 공유하고 싶습니다...", author: {
+name: "Minjae Park", avatar: "/placeholder.svg?height=40&width=40", }, date:
+"어제", comments: 42, likes: 218, views: 1876, tags: ["React", "Redux",
+"Zustand", "상태관리"], }, { id: 3, title: "TypeScript 타입 시스템 심화 학습",
+content: "TypeScript의 고급 타입 기능을 활용하여 더 안전하고 유지보수하기 쉬운
+코드를 작성하는 방법에 대해 알아보겠습니다...", author: { name: "Jisoo Lee",
+avatar: "/placeholder.svg?height=40&width=40", }, date: "3일 전", comments: 18,
+likes: 97, views: 823, tags: ["TypeScript", "프로그래밍", "타입시스템"], }, {
+id: 4, title: "프론트엔드 개발자를 위한 성능 최적화 팁", content: "웹
+애플리케이션의 성능을 향상시키기 위한 실용적인 팁과 트릭을 소개합니다. 로딩
+시간을 줄이고 사용자 경험을 개선하는 방법...", author: { name: "Hyunjin Cho",
+avatar: "/placeholder.svg?height=40&width=40", }, date: "1주일 전", comments:
+31, likes: 142, views: 1567, tags: ["성능최적화", "프론트엔드", "웹개발"], }, {
+id: 5, title: "Node.js와 Express로 RESTful API 구축하기", content: "백엔드
+개발을 시작하는 프론트엔드 개발자를 위한 가이드. Node.js와 Express를 사용하여
+안전하고 확장 가능한 API를 만드는 방법...", author: { name: "Sungho Kim",
+avatar: "/placeholder.svg?height=40&width=40", }, date: "2주일 전", comments:
+27, likes: 113, views: 1342, tags: ["Node.js", "Express", "백엔드", "API"], }, ]
+export default function CommunityPage() { const [searchQuery, setSearchQuery] =
+useState("") return (
+<div className="container mx-auto py-6 max-w-5xl">
+  <div className="flex flex-col gap-6">
+    <header className="flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold">커뮤니티</h1>
+        <button>글쓰기</button>
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-4">
+        <div className="relative flex-1">
+          <Search
+            className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+          />
+          <Input placeholder="검색어를 입력하세요" className="pl-10"
+          value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button variant="outline" className="flex gap-2">
+              <Filter className="h-4 w-4" />
+              <span>필터</span>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem>최신순</DropdownMenuItem>
+            <DropdownMenuItem>인기순</DropdownMenuItem>
+            <DropdownMenuItem>조회수순</DropdownMenuItem>
+            <DropdownMenuItem>댓글순</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </header>
+
+    <Tabs defaultValue="all">
+      <TabsList className="mb-4">
+        <TabsTrigger value="all">전체</TabsTrigger>
+        <TabsTrigger value="questions">질문</TabsTrigger>
+        <TabsTrigger value="discussions">토론</TabsTrigger>
+        <TabsTrigger value="tips">팁과 노하우</TabsTrigger>
+        <TabsTrigger value="showcase">작품 공유</TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="all" className="space-y-4">
+        {posts.map((post) => (
+        <PostCard key="{post.id}" post="{post}" />
+        ))}
+
+        <div className="flex justify-center mt-8">
+          <button variant="outline" className="flex items-center gap-2">
+            더 보기
+            <ChevronDown className="h-4 w-4" />
+          </button>
+        </div>
+      </TabsContent>
+
+      {/* Other tab contents would be similar but with filtered data */}
+      <TabsContent value="questions" className="space-y-4">
+        <div className="flex justify-center p-12 text-muted-foreground">
+          질문 카테고리의 게시물이 여기에 표시됩니다.
+        </div>
+      </TabsContent>
+    </Tabs>
+  </div>
+</div>
+) } function PostCard({ post }) { return (
+<Card className="overflow-hidden transition-all hover:shadow-md">
+  <CardHeader className="p-4 pb-0">
+    <div className="flex justify-between items-start">
+      <h3 className="font-semibold text-lg hover:text-primary cursor-pointer">
+        {post.title}
+      </h3>
+    </div>
+  </CardHeader>
+  <CardContent className="p-4 pt-2">
+    <p className="text-muted-foreground line-clamp-2 text-sm mb-3">
+      {post.content}
+    </p>
+    <div className="flex flex-wrap gap-2 mb-3">
+      {post.tags.map((tag) => (
+      <span
+        key="{tag}"
+        className="bg-muted text-xs px-2 py-1 rounded-full hover:bg-primary/10 cursor-pointer"
+      >
+        {tag}
+      </span>
+      ))}
+    </div>
+  </CardContent>
+  <CardFooter
+    className="p-4 pt-0 flex flex-wrap justify-between items-center text-sm"
+  >
+    <div className="flex items-center gap-2">
+      <Avatar className="h-6 w-6">
+        <AvatarImage src="{post.author.avatar}" alt="{post.author.name}" />
+        <AvatarFallback>{post.author.name.charAt(0)}</AvatarFallback>
+      </Avatar>
+      <span className="text-muted-foreground">{post.author.name}</span>
+      <span className="text-muted-foreground">•</span>
+      <span className="text-muted-foreground">{post.date}</span>
+    </div>
+    <div className="flex items-center gap-4 text-muted-foreground">
+      <div className="flex items-center gap-1">
+        <MessageSquare className="h-4 w-4" />
+        <span>{post.comments}</span>
+      </div>
+      <div className="flex items-center gap-1">
+        <ThumbsUp className="h-4 w-4" />
+        <span>{post.likes}</span>
+      </div>
+      <div className="flex items-center gap-1">
+        <Eye className="h-4 w-4" />
+        <span>{post.views}</span>
+      </div>
+    </div>
+  </CardFooter>
+</Card>
+) }
