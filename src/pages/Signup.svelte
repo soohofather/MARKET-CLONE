@@ -1,6 +1,9 @@
 <script
   src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"
-></script>
+>
+  import Footer from "../components/Footer.svelte";
+
+</script>
 
 <form id="signup-form">
   <div>회원 가입</div>
@@ -29,3 +32,4 @@
   </div>
   <div id="password-info"></div>
 </form>
+<Footer />
