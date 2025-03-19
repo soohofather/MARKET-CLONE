@@ -6,12 +6,14 @@
   import Write from "./pages/Write.svelte";
   import NotFound from "./pages/NotFound.svelte";
   import "./css/main.css";
+  import GatherTown from "./pages/GatherTown.svelte";
 
   const routes = {
     "/": Main,
     "/login": Login,
     "/signup": Signup,
     "/write": Write,
+    "/gather-town": GatherTown,
     "*": NotFound,
   };
 </script>
