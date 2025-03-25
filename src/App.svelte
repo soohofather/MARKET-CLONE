@@ -7,6 +7,7 @@
   import NotFound from "./pages/NotFound.svelte";
   import "./css/main.css";
   import GatherTown from "./pages/GatherTown.svelte";
+  import WordSearch from "./pages/WordSearch.svelte";
 
   const routes = {
     "/": Main,
@@ -14,6 +15,7 @@
     "/signup": Signup,
     "/write": Write,
     "/gather-town": GatherTown,
+    "/word-search": WordSearch,
     "*": NotFound,
   };
 </script>
